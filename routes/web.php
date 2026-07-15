@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,11 +42,35 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])
     ->name('users.edit');
 
-Route::put('/users/{id}', [UserController::class, 'update'])
+    Route::put('/users/{id}', [UserController::class, 'update'])
     ->name('users.update');
 
     Route::delete('/users/{id}', [UserController::class, 'destroy'])
     ->name('users.destroy');
+
+    /*
+|--------------------------------------------------------------------------
+| CATEGORY
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/categories',[CategoryController::class,'index'])
+        ->name('categories.index');
+
+Route::get('/categories/create',[CategoryController::class,'create'])
+        ->name('categories.create');
+
+Route::post('/categories',[CategoryController::class,'store'])
+        ->name('categories.store');
+
+Route::get('/categories/{id}/edit',[CategoryController::class,'edit'])
+        ->name('categories.edit');
+
+Route::put('/categories/{id}',[CategoryController::class,'update'])
+        ->name('categories.update');
+
+Route::delete('/categories/{id}',[CategoryController::class,'destroy'])
+        ->name('categories.destroy');
 });
 
 Route::get('/manager/dashboard', [DashboardController::class, 'manager'])
