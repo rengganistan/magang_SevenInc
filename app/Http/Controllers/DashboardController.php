@@ -8,16 +8,16 @@ class DashboardController extends Controller
 {
     public function admin()
     {
-        return view('dashboard.admin');
+        return view('dashboards.admin');
     }
 
     public function manager()
     {
-        return view('dashboard.manager');
+        return view('dashboards.manager');
     }
 
     public function staff()
     {
-        return view('dashboard.staff');
+        return view('dashboards.staff');
     }
 }
