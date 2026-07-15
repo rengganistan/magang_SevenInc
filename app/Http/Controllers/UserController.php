@@ -42,26 +42,42 @@ protected UserService $userService;/**
     /**
      * Menampilkan form edit.
      */
-    public function edit(string $id): View
-    {
-        return view('users.edit');
-    }
+    public function edit(int $id): View
+{
+    $user = $this->userService->getUserById($id);
 
-    /**
-     * Update user.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    return view('users.edit', compact('user'));
+}
 
-    /**
-     * Hapus user.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function update(Request $request, int $id): RedirectResponse
+{
+    $validated = $request->validate([
+
+        'name' => 'required|string|max:255',
+
+        'email' => 'required|email',
+
+        'password' => 'nullable|min:6',
+
+        'role' => 'required|in:admin,manager,staff',
+
+    ]);
+
+    $this->userService->updateUser($id, $validated);
+
+    return redirect()
+            ->route('users.index')
+            ->with('success', 'User berhasil diperbarui.');
+}
+
+public function destroy(int $id): RedirectResponse
+{
+    $this->userService->deleteUser($id);
+
+    return redirect()
+        ->route('users.index')
+        ->with('success', 'User berhasil dihapus.');
+}
     public function __construct(UserService $userService)
 {
     $this->userService = $userService;
