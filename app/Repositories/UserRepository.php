@@ -30,8 +30,33 @@ class UserRepository
         return User::where('email', $email)->first();
     }
 
+    /**
+     * Menambahkan user.
+     */
     public function create(array $data)
-{
-    return User::create($data);
-}
+    {
+        return User::create($data);
+    }
+
+    /**
+     * Update data user.
+     */
+    public function update(int $id, array $data)
+    {
+        $user = User::findOrFail($id);
+
+        $user->update($data);
+
+        return $user;
+    }
+
+    /**
+     * Menghapus user.
+     */
+    public function delete(int $id): bool
+    {
+        $user = User::findOrFail($id);
+
+        return $user->delete();
+    }
 }

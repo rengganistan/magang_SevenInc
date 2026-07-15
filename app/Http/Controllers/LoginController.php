@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+
 class LoginController extends Controller
 {
     protected AuthService $authService;
@@ -27,41 +28,32 @@ class LoginController extends Controller
     /**
      * Memproses login
      */
-    public function login(Request $request): RedirectResponse
-    {
-        // Validasi input
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+public function login(Request $request): RedirectResponse
+{
+    $result = $this->authService->login(
+        $request->email,
+        $request->password
+    );
 
-        // Memanggil AuthService
-        $result = $this->authService->login(
-            $request->email,
-            $request->password
-        );
+    if (!$result['success']) {
 
-        // Jika login gagal
-        if (!$result['success']) {
-            return back()
-                ->withErrors([
-                    'email' => $result['message']
-                ])
-                ->withInput();
-        }
-
-        // Ambil data user
-        $user = $result['user'];
-
-        // Redirect berdasarkan role
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        if ($user->role === 'manager') {
-            return redirect()->route('manager.dashboard');
-        }
-
-        return redirect()->route('staff.dashboard');
+        return back()
+            ->withErrors([
+                'email' => $result['message']
+            ])
+            ->withInput();
     }
+
+    $user = $result['user'];
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->role === 'manager') {
+        return redirect()->route('manager.dashboard');
+    }
+
+    return redirect()->route('staff.dashboard');
+}
 }
