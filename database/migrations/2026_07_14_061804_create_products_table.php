@@ -6,41 +6,41 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-    {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_id')
-                ->constrained('categories')
-                ->cascadeOnDelete();
+{
+    Schema::create('products', function (Blueprint $table) {
 
-            $table->foreignId('supplier_id')
-                ->constrained('suppliers')
-                ->cascadeOnDelete();
+        $table->id();
 
-            $table->string('name');
-            $table->string('sku')->unique();
-            $table->text('description')->nullable();
+        $table->foreignId('category_id')
+            ->constrained()
+            ->cascadeOnDelete();
 
-            $table->decimal('purchase_price', 12, 2);
-            $table->decimal('selling_price', 12, 2);
+        $table->foreignId('supplier_id')
+            ->nullable()
+            ->constrained()
+            ->nullOnDelete();
 
-            $table->string('image')->nullable();
+        $table->string('kode')->unique();
 
-            $table->integer('minimum_stock')->default(0);
+        $table->string('nama');
 
-            $table->timestamps();
-        });
-    }
+        $table->integer('stok')->default(0);
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('products');
-    }
+        $table->integer('stok_minimum')->default(5);
+
+        $table->string('satuan');
+
+        $table->decimal('harga_beli',15,2);
+
+        $table->decimal('harga_jual',15,2);
+
+        $table->string('gambar')->nullable();
+
+        $table->text('deskripsi')->nullable();
+
+        $table->timestamps();
+
+    });
+}
 };
