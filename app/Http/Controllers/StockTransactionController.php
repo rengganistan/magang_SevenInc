@@ -24,16 +24,27 @@ class StockTransactionController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function index()
-    {
-        $transactions = $this->service
-            ->getTransactions();
+    public function incoming()
+{
+    $transactions = $this->service
+        ->getIncomingTransactions();
 
-        return view(
-            'stock-transactions.index',
-            compact('transactions')
-        );
-    }
+    return view(
+        'stock-transactions.incoming',
+        compact('transactions')
+    );
+}
+
+public function outgoing()
+{
+    $transactions = $this->service
+        ->getOutgoingTransactions();
+
+    return view(
+        'stock-transactions.outgoing',
+        compact('transactions')
+    );
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -81,12 +92,8 @@ class StockTransactionController extends Controller
         $this->service
             ->createTransaction($validated);
 
-        return redirect()
-            ->route('stock-transactions.index')
-            ->with(
-                'success',
-                'Transaksi berhasil disimpan.'
-            );
+       return redirect()
+    ->route('transactions.incoming');
     }
 
     /*
@@ -103,13 +110,8 @@ class StockTransactionController extends Controller
         $products = Product::orderBy('nama')
             ->get();
 
-        return view(
-            'stock-transactions.edit',
-            compact(
-                'transaction',
-                'products'
-            )
-        );
+        return redirect()
+    ->route('transactions.incoming');
     }
 
     /*
@@ -146,11 +148,7 @@ class StockTransactionController extends Controller
             );
 
         return redirect()
-            ->route('stock-transactions.index')
-            ->with(
-                'success',
-                'Transaksi berhasil diperbarui.'
-            );
+    ->route('transactions.incoming');
     }
 
     /*
@@ -171,4 +169,8 @@ class StockTransactionController extends Controller
                 'Transaksi berhasil dihapus.'
             );
     }
-}
+
+
+    }
+
+

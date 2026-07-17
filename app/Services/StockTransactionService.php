@@ -22,6 +22,18 @@ class StockTransactionService
         return $this->repository->getAll();
     }
 
+    public function getIncomingTransactions()
+{
+    return $this->repository
+        ->getIncoming();
+}
+
+public function getOutgoingTransactions()
+{
+    return $this->repository
+        ->getOutgoing();
+}
+
     public function getTransactionById($id)
     {
         return $this->repository->findById($id);

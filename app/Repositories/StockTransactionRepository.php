@@ -39,4 +39,26 @@ class StockTransactionRepository
     {
         return StockTransaction::destroy($id);
     }
+
+    public function getIncoming()
+{
+    return StockTransaction::with([
+            'product',
+            'user'
+        ])
+        ->where('type','Masuk')
+        ->latest()
+        ->get();
+}
+
+public function getOutgoing()
+{
+    return StockTransaction::with([
+            'product',
+            'user'
+        ])
+        ->where('type','Keluar')
+        ->latest()
+        ->get();
+}
 }

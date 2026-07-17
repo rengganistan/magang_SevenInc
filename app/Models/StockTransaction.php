@@ -39,4 +39,14 @@ class StockTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getIncomingTransactions()
+{
+    return $this->repository->incoming();
+}
+
+public function getOutgoingTransactions()
+{
+    return $this->repository->outgoing();
+}
 }
