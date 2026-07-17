@@ -227,7 +227,7 @@
                                     @method('DELETE')
 
                                     <button
-                                        onclick="return confirm('Yakin ingin menghapus transaksi?')"
+                                        type="submit"
                                         class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
 
                                         Hapus

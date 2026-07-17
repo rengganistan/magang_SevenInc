@@ -127,9 +127,9 @@
                             </a>
 
                             <form
-                                action="{{ route('categories.destroy',$category->id) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
+                            action="{{ route('categories.destroy',$category->id) }}"
+                            method="POST"
+                            class="delete-form">
 
                                 @csrf
                                 @method('DELETE')

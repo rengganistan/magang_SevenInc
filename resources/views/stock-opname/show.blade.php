@@ -129,7 +129,7 @@
             </div>
             <form action="{{ route('stock-opname.selesaikan', $opname->id) }}"
                 method="POST"
-                onsubmit="return confirm('Yakin ingin menerapkan penyesuaian stok? Aksi ini tidak bisa dibatalkan.')">
+                class="delete-form">
                 @csrf
                 <button type="submit"
                     class="whitespace-nowrap px-6 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold">

@@ -199,11 +199,10 @@
 
                                 </a>
 
-                                <form
-                                    action="{{ route('users.destroy',$user->id) }}"
-                                    method="POST"
-                                    onsubmit="return confirm('Yakin ingin menghapus user ini?')">
-
+                               <form
+                                action="{{ route('users.destroy',$user->id) }}"
+                                method="POST"
+                                class="delete-form">
                                     @csrf
                                     @method('DELETE')
 

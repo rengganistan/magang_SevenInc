@@ -4,57 +4,77 @@
 
 <div class="p-4 bg-gray-900 min-h-screen">
 
-    {{-- Header --}}
-    <div class="mb-8 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-5">
+<div class="flex flex-wrap gap-3">
 
-        <div>
+    <a href="{{ route('admin.dashboard') }}"
+        class="px-5 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white">
 
-            <h1 class="text-4xl font-bold text-white">
-                Manajemen Produk
-            </h1>
+        ← Dashboard
 
-            <p class="text-gray-400 mt-2">
-                Kelola seluruh data produk pada sistem inventory.
-            </p>
+    </a>
 
-        </div>
+    <a href="{{ route('products.export') }}"
+        class="px-5 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white">
 
-        <div class="flex gap-3">
+        📥 Export Excel
 
-            <a
-                href="{{ route('admin.dashboard') }}"
-                class="px-5 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 text-white">
+    </a>
 
-                ← Dashboard
+    <form
+        action="{{ route('products.import') }}"
+        method="POST"
+        enctype="multipart/form-data"
+        class="flex gap-2">
 
-            </a>
+        @csrf
 
-            <a
-                href="{{ route('products.create') }}"
-                class="px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+        <input
+            type="file"
+            name="file"
+            required
+            accept=".xlsx,.xls,.csv"
+            class="bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600">
 
-                + Tambah Produk
+        <button
+            class="px-5 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white">
 
-            </a>
+            📤 Import
 
-        </div>
+        </button>
 
-    </div>
+    </form>
+
+    <a href="{{ route('products.create') }}"
+        class="px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">
+
+        + Tambah Produk
+
+    </a>
+
+</div>
+
+    <a
+        href="{{ route('products.template') }}"
+        class="px-5 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white">
+
+        ⬇ Download Template
+
+    </a>
 
     {{-- Alert Success --}}
-    @if(session('success'))
+@if(session('error'))
 
-    <div class="mb-6 rounded-lg bg-green-900 border border-green-700 p-4">
+<div class="mb-6 rounded-lg bg-red-900 border border-red-700 p-4">
 
-        <span class="text-green-300">
+    <span class="text-red-300">
 
-            {{ session('success') }}
+        {{ session('error') }}
 
-        </span>
+    </span>
 
-    </div>
+</div>
 
-    @endif
+@endif
 
     {{-- Statistik --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
@@ -329,9 +349,10 @@
                             </a>
 
                             <form
-                                action="{{ route('products.destroy',$product->id) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+
+                            action="{{ route('products.destroy',$product->id) }}"
+                            method="POST"
+                            class="delete-form">
 
                                 @csrf
                                 @method('DELETE')
@@ -396,12 +417,39 @@
                 </tbody>
 
             </table>
+             <div class="flex justify-center mt-6">
+
+                {{ $products->links() }}
+
+            </div>
 
         </div>
 
     </div>
 
 </div>
+
+@if(session('import_errors'))
+
+<div class="mb-6 rounded-lg bg-red-900 border border-red-700 p-4">
+
+    <h3 class="font-bold text-white mb-2">
+        Import gagal pada beberapa data:
+    </h3>
+
+    <ul class="list-disc ml-5 text-red-300">
+
+        @foreach(session('import_errors') as $error)
+
+            <li>{{ $error }}</li>
+
+        @endforeach
+
+    </ul>
+
+</div>
+
+@endif
 
 {{-- Live Search --}}
 <script>

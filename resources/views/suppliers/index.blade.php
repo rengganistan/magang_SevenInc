@@ -164,9 +164,10 @@
 
                                     </a>
 
-                                    <form action="{{ route('suppliers.destroy',$supplier->id) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Yakin ingin menghapus supplier ini?')">
+                                    <form
+                                    action="{{ route('suppliers.destroy',$supplier->id) }}"
+                                    method="POST"
+                                    class="delete-form">
 
                                         @csrf
                                         @method('DELETE')

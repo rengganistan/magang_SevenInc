@@ -92,7 +92,7 @@
                                 @if($opname->status === 'Draft')
                                 <form action="{{ route('stock-opname.destroy', $opname->id) }}"
                                     method="POST"
-                                    onsubmit="return confirm('Hapus draft opname ini?')">
+                                    class="delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm">
