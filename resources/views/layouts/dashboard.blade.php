@@ -35,20 +35,69 @@
 
         <x-sidebar.admin-sidebar />
 
-     <div id="main-content"
-class="relative min-h-screen w-full overflow-y-auto bg-gray-900 lg:ml-64">
+        <div id="main-content"
+            class="relative min-h-screen w-full overflow-y-auto bg-gray-900 lg:ml-64">
 
             <main class="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-900">
 
-    @yield('content')
+                @yield('content')
 
-</main>
+            </main>
 
             <x-footer-dashboard />
 
         </div>
 
     </div>
+
+    {{-- SweetAlert Success --}}
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+    @endif
+
+    {{-- SweetAlert Delete --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            document.querySelectorAll('.delete-form').forEach(form => {
+
+                form.addEventListener('submit', function(e) {
+
+                    e.preventDefault();
+
+                    Swal.fire({
+                        title: 'Hapus Data?',
+                        text: 'Data yang dihapus tidak dapat dikembalikan!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc2626',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Ya, Hapus',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+
+                        if(result.isConfirmed){
+                            form.submit();
+                        }
+
+                    });
+
+                });
+
+            });
+
+        });
+    </script>
 
 </body>
 

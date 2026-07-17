@@ -11,14 +11,15 @@ class ProductRepository
      * Ambil semua produk beserta kategori.
      */
     public function getAll()
-{
-    return Product::with([
-        'category',
-        'supplier'
-    ])
-    ->latest()
-    ->get();
-}
+    {
+        return Product::with([
+            'category',
+            'supplier',
+            'attributes'
+        ])
+        ->latest()
+        ->paginate(10);
+    }
 
     /**
      * Cari produk berdasarkan ID.

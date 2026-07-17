@@ -353,7 +353,7 @@
                             <td class="px-5 py-3 text-center">
                                 <form action="{{ route('product-attributes.destroy', [$product->id, $attr->id]) }}"
                                     method="POST"
-                                    onsubmit="return confirm('Hapus atribut ini?')">
+                                    class="delete-form">
                                     @csrf
                                     @method('DELETE')
                                     <button class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs">

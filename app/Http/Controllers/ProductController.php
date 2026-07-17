@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Imports\ProductImport;
+use App\Exports\ProductExport;
+use App\Exports\ProductTemplateExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -149,4 +153,53 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('success', 'Produk berhasil dihapus.');
     }
+
+/*
+|--------------------------------------------------------------------------
+| EXPORT
+|--------------------------------------------------------------------------
+*/
+
+public function export()
+{
+    return Excel::download(
+        new ProductExport,
+        'products.xlsx'
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
+| IMPORT
+|--------------------------------------------------------------------------
+*/
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv'
+    ]);
+
+    $import = new ProductImport();
+
+    Excel::import($import, $request->file('file'));
+
+    if (count($import->getErrors()) > 0) {
+
+        return back()->with('import_errors', $import->getErrors());
+    }
+
+    return back()->with(
+        'success',
+        'Produk berhasil diimport.'
+    );
+}
+
+public function downloadTemplate()
+{
+    return Excel::download(
+        new ProductTemplateExport(),
+        'Template_Import_Produk.xlsx'
+    );
+}
 }
