@@ -10,7 +10,7 @@ class Product extends Model
 
         'kode',
 
-        'name',
+        'nama',
 
         'category_id',
 
@@ -43,7 +43,12 @@ class Product extends Model
     }
 
     public function stockTransactions()
-{
-    return $this->hasMany(StockTransaction::class);
-}
+    {
+        return $this->hasMany(StockTransaction::class);
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\StockTransactionService;
@@ -54,12 +55,15 @@ public function outgoing()
 
     public function create()
     {
-        $products = Product::orderBy('nama')
-            ->get();
+        $products = Product::orderBy('nama')->get();
+
+        $suppliers = Supplier::orderBy('nama')->get();
+
+        $type = request('type', 'Masuk');
 
         return view(
             'stock-transactions.create',
-            compact('products')
+            compact('products', 'suppliers', 'type')
         );
     }
 
@@ -75,6 +79,8 @@ public function outgoing()
 
             'product_id' => 'required|exists:products,id',
 
+            'supplier_id' => 'nullable|exists:suppliers,id',
+
             'type' => 'required|in:Masuk,Keluar',
 
             'quantity' => 'required|integer|min:1',
@@ -89,11 +95,15 @@ public function outgoing()
 
         $validated['user_id'] = Auth::id();
 
-        $this->service
-            ->createTransaction($validated);
+        $this->service->createTransaction($validated);
 
-       return redirect()
-    ->route('transactions.incoming');
+        $route = $validated['type'] === 'Masuk'
+            ? 'transactions.incoming'
+            : 'transactions.outgoing';
+
+        return redirect()
+            ->route($route)
+            ->with('success', 'Transaksi berhasil disimpan.');
     }
 
     /*
@@ -163,7 +173,7 @@ public function outgoing()
             ->deleteTransaction($id);
 
         return redirect()
-            ->route('stock-transactions.index')
+            ->route('transactions.incoming')
             ->with(
                 'success',
                 'Transaksi berhasil dihapus.'

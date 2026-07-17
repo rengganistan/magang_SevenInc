@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
@@ -32,9 +33,11 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('nama')->get();
 
-        return view('products.create', compact('categories'));
+        $suppliers = Supplier::orderBy('nama')->get();
+
+        return view('products.create', compact('categories', 'suppliers'));
     }
 
     /**
@@ -47,6 +50,7 @@ class ProductController extends Controller
             'kode'           => 'required|unique:products,kode',
             'nama'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
+            'supplier_id'    => 'required|exists:suppliers,id',
             'satuan'         => 'required|string|max:100',
             'stok'           => 'required|integer',
             'stok_minimum'   => 'required|integer',
@@ -79,11 +83,12 @@ class ProductController extends Controller
      */
     public function edit(int $id): View
     {
-        $product = $this->productService->getProductById($id);
+        $product    = $this->productService->getProductById($id);
+        $categories = Category::orderBy('nama')->get();
+        $suppliers  = Supplier::orderBy('nama')->get();
+        $attributes = $product->attributes;
 
-        $categories = Category::orderBy('name')->get();
-
-        return view('products.edit', compact('product', 'categories'));
+        return view('products.edit', compact('product', 'categories', 'suppliers', 'attributes'));
     }
 
     /**
@@ -98,6 +103,8 @@ class ProductController extends Controller
             'nama' => 'required|string|max:255',
 
             'category_id' => 'required|exists:categories,id',
+
+            'supplier_id' => 'required|exists:suppliers,id',
 
             'satuan' => 'required|string|max:100',
 

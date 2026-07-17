@@ -10,6 +10,8 @@ class StockTransaction extends Model
 
         'product_id',
 
+        'supplier_id',
+
         'user_id',
 
         'type',
@@ -33,6 +35,11 @@ class StockTransaction extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function user()

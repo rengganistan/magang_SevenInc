@@ -10,6 +10,7 @@ class StockTransactionService
 {
     protected StockTransactionRepository $repository;
 
+    
     public function __construct(
         StockTransactionRepository $repository
     )

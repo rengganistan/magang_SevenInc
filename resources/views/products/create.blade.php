@@ -120,7 +120,36 @@
                                     value="{{ $category->id }}"
                                     {{ old('category_id')==$category->id?'selected':'' }}>
 
-                                    {{ $category->name }}
+                                    {{ $category->nama }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    {{-- Supplier --}}
+                    <div>
+
+                        <label class="block mb-2 text-gray-300 font-semibold">
+                            Supplier
+                        </label>
+
+                        <select
+                            name="supplier_id"
+                            class="w-full rounded-xl border border-gray-600 bg-gray-700 text-white px-4 py-3">
+
+                            <option value="">-- Pilih Supplier --</option>
+
+                            @foreach($suppliers as $supplier)
+
+                                <option
+                                    value="{{ $supplier->id }}"
+                                    {{ old('supplier_id')==$supplier->id ? 'selected' : '' }}>
+
+                                    {{ $supplier->nama }}
 
                                 </option>
 

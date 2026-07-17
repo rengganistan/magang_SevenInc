@@ -31,7 +31,7 @@
 
             </a>
 
-            <a href="{{ route('transactions.create') }}"
+            <a href="{{ route('transactions.create', ['type' => 'Masuk']) }}"
                 class="px-5 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white">
 
                 + Barang Masuk
