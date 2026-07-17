@@ -32,7 +32,7 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
 
-            'name' => 'required|max:255',
+            'nama' => 'required|max:255',
 
             'address' => 'nullable',
 
@@ -60,7 +60,7 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
 
-            'name' => 'required|max:255',
+            'nama' => 'required|max:255',
 
             'address' => 'nullable',
 

@@ -113,7 +113,7 @@
 
                                 <span class="font-semibold text-white">
 
-                                    {{ $supplier->name }}
+                                    {{ $supplier->nama }}
 
                                 </span>
 

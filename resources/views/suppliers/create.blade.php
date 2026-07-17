@@ -73,8 +73,8 @@
 
                         <input
                             type="text"
-                            name="name"
-                            value="{{ old('name') }}"
+                            name="nama"
+                            value="{{ old('nama') }}"
                             placeholder="PT Maju Jaya"
                             class="w-full rounded-xl border border-gray-600 bg-gray-700 px-4 py-3 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
