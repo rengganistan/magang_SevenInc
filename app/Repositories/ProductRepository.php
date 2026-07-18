@@ -8,17 +8,24 @@ use Illuminate\Support\Facades\Storage;
 class ProductRepository
 {
     /**
-     * Ambil semua produk beserta kategori.
+     * Ambil semua produk beserta kategori, dengan opsional filter pencarian.
      */
-    public function getAll()
+    public function getAll(?string $search = null)
     {
-        return Product::with([
+        $query = Product::with([
             'category',
             'supplier',
             'attributes'
-        ])
-        ->latest()
-        ->paginate(10);
+        ]);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('kode', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->latest()->paginate(10)->withQueryString();
     }
 
     /**

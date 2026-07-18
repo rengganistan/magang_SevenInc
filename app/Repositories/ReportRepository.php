@@ -16,16 +16,20 @@ class ReportRepository
     |--------------------------------------------------------------------------
     */
 
-    public function stock($category = null)
+    public function stock($category = null, $start = null, $end = null)
     {
         return Product::with([
             'category',
             'supplier'
         ])
         ->when($category, function ($query) use ($category) {
-
             $query->where('category_id', $category);
-
+        })
+        ->when($start, function ($q) use ($start) {
+            $q->whereDate('created_at', '>=', $start);
+        })
+        ->when($end, function ($q) use ($end) {
+            $q->whereDate('created_at', '<=', $end);
         })
         ->orderBy('nama')
         ->get();

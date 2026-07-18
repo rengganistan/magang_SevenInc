@@ -14,9 +14,9 @@ class ProductService
         $this->productRepository=$productRepository;
     }
 
-    public function getProducts()
+    public function getProducts(?string $search = null)
     {
-        return $this->productRepository->getAll();
+        return $this->productRepository->getAll($search);
     }
 
     public function getProductById($id)

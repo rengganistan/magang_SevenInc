@@ -3,16 +3,25 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductAttributeController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\StockTransactionController;
-use App\Http\Controllers\StockOpnameController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\StockTransactionController;
+use App\Http\Controllers\Admin\StockOpnameController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\FinanceReportController;
+use App\Http\Controllers\Manager\ManagerProductController;
+use App\Http\Controllers\Manager\ManagerStockTransactionController;
+use App\Http\Controllers\Manager\ManagerStockOpnameController;
+use App\Http\Controllers\Manager\ManagerSupplierController;
+use App\Http\Controllers\Manager\ManagerReportController;
+use App\Http\Controllers\Staff\StaffDashboardController;
+use App\Http\Controllers\Staff\StaffStockTransactionController;
+use App\Http\Controllers\Staff\StaffProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +38,10 @@ Route::get('/login', [LoginController::class, 'index'])
 
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.process');
+
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout')
+    ->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -206,6 +219,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         Route::get('/activity', [ReportController::class, 'activity'])
             ->name('reports.activity');
+
+        Route::get('/finance', [FinanceReportController::class, 'index'])
+            ->name('reports.finance');
     });
 
     /*
@@ -232,10 +248,60 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'role:admin,manager'])->group(function () {
+Route::middleware(['auth', 'role:admin,manager'])->prefix('manager')->name('manager.')->group(function () {
 
-    Route::get('/manager/dashboard', [DashboardController::class, 'manager'])
-        ->name('manager.dashboard');
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'manager'])
+        ->name('dashboard');
+
+    // Produk
+    Route::resource('products', ManagerProductController::class);
+
+    // Transaksi Barang
+    Route::get('/transactions/incoming', [ManagerStockTransactionController::class, 'incoming'])
+        ->name('transactions.incoming');
+
+    Route::get('/transactions/outgoing', [ManagerStockTransactionController::class, 'outgoing'])
+        ->name('transactions.outgoing');
+
+    Route::get('/transactions/create', [ManagerStockTransactionController::class, 'create'])
+        ->name('transactions.create');
+
+    Route::post('/transactions', [ManagerStockTransactionController::class, 'store'])
+        ->name('transactions.store');
+
+    Route::delete('/transactions/{id}', [ManagerStockTransactionController::class, 'destroy'])
+        ->name('transactions.destroy');
+
+    // Stock Opname
+    Route::get('/stock-opname', [ManagerStockOpnameController::class, 'index'])
+        ->name('stock-opname.index');
+
+    Route::get('/stock-opname/create', [ManagerStockOpnameController::class, 'create'])
+        ->name('stock-opname.create');
+
+    Route::post('/stock-opname', [ManagerStockOpnameController::class, 'store'])
+        ->name('stock-opname.store');
+
+    Route::get('/stock-opname/{id}', [ManagerStockOpnameController::class, 'show'])
+        ->name('stock-opname.show');
+
+    Route::post('/stock-opname/{id}/selesaikan', [ManagerStockOpnameController::class, 'selesaikan'])
+        ->name('stock-opname.selesaikan');
+
+    Route::delete('/stock-opname/{id}', [ManagerStockOpnameController::class, 'destroy'])
+        ->name('stock-opname.destroy');
+
+    // Supplier (read-only)
+    Route::get('/suppliers', [ManagerSupplierController::class, 'index'])
+        ->name('suppliers.index');
+
+    // Laporan
+    Route::get('/reports/stock', [ManagerReportController::class, 'stock'])
+        ->name('reports.stock');
+
+    Route::get('/reports/transaction', [ManagerReportController::class, 'transaction'])
+        ->name('reports.transaction');
 
 });
 
@@ -245,9 +311,28 @@ Route::middleware(['auth', 'role:admin,manager'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'role:admin,manager,staff'])->group(function () {
+Route::middleware(['auth', 'role:admin,manager,staff'])->prefix('staff')->name('staff.')->group(function () {
 
-    Route::get('/staff/dashboard', [DashboardController::class, 'staff'])
-        ->name('staff.dashboard');
+    // Dashboard
+    Route::get('/dashboard', [StaffDashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Produk (read-only)
+    Route::get('/products', [StaffProductController::class, 'index'])
+        ->name('products.index');
+    Route::get('/products/{id}', [StaffProductController::class, 'show'])
+        ->name('products.show');
+
+    // Transaksi
+    Route::get('/transactions/incoming', [StaffStockTransactionController::class, 'incoming'])
+        ->name('transactions.incoming');
+    Route::get('/transactions/outgoing', [StaffStockTransactionController::class, 'outgoing'])
+        ->name('transactions.outgoing');
+    Route::get('/transactions/create', [StaffStockTransactionController::class, 'create'])
+        ->name('transactions.create');
+    Route::post('/transactions', [StaffStockTransactionController::class, 'store'])
+        ->name('transactions.store');
+    Route::post('/transactions/{id}/confirm', [StaffStockTransactionController::class, 'confirm'])
+        ->name('transactions.confirm');
 
 });

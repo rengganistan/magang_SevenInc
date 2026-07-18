@@ -19,9 +19,9 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function stock($category = null)
+    public function stock($category = null, $start = null, $end = null)
     {
-        return $this->repository->stock($category);
+        return $this->repository->stock($category, $start, $end);
     }
 
     /*
