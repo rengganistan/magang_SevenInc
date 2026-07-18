@@ -129,7 +129,7 @@
                 <div class="mt-8">
 
                     <label class="block mb-3 text-gray-300 font-semibold">
-                        Logo Saat Ini
+                        Upload Logo
                     </label>
 
                     <img

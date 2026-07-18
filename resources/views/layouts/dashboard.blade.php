@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -33,12 +33,28 @@
 
     <div class="flex pt-16 overflow-hidden bg-gray-900">
 
-        <x-sidebar.admin-sidebar />
+        @if(auth()->user()->role === 'manager')
+            <x-sidebar.manager-sidebar />
+        @elseif(auth()->user()->role === 'staff')
+            <x-sidebar.staff-sidebar />
+        @else
+            <x-sidebar.admin-sidebar />
+        @endif
 
         <div id="main-content"
             class="relative min-h-screen w-full overflow-y-auto bg-gray-900 lg:ml-64">
 
             <main class="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-900">
+
+                {{-- Access denied alert --}}
+                @if(session('error'))
+                <div class="mb-4 rounded-xl border border-red-700 bg-red-900/40 px-4 py-3 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-red-300 text-sm">{{ session('error') }}</span>
+                </div>
+                @endif
 
                 @yield('content')
 

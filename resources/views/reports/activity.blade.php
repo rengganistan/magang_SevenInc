@@ -60,6 +60,12 @@
     </div>
 
     {{-- Table --}}
+    @php
+        $showAll   = request()->boolean('show_all');
+        $displayed = $showAll ? $activities : $activities->take(25);
+        $remaining = $activities->count() - 25;
+    @endphp
+
     <div class="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 shadow-xl">
         <div class="overflow-x-auto">
             <table class="min-w-full">
@@ -76,7 +82,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-700">
 
-                    @forelse($activities as $activity)
+                    @forelse($displayed as $activity)
                     <tr class="hover:bg-gray-700 transition">
 
                         <td class="px-6 py-4 text-white">{{ $loop->iteration }}</td>
@@ -104,18 +110,9 @@
                             </span>
                         </td>
 
-                        <td class="px-6 py-4 text-gray-400 text-sm">
-                            {{ $activity->model ?? '-' }}
-                        </td>
-
-                        <td class="px-6 py-4 text-gray-300 text-sm">
-                            {{ $activity->model_name ?? '-' }}
-                        </td>
-
-                        <td class="px-6 py-4 text-gray-400 text-sm">
-                            {{ $activity->keterangan ?? '-' }}
-                        </td>
-
+                        <td class="px-6 py-4 text-gray-400 text-sm">{{ $activity->model ?? '-' }}</td>
+                        <td class="px-6 py-4 text-gray-300 text-sm">{{ $activity->model_name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-gray-400 text-sm">{{ $activity->keterangan ?? '-' }}</td>
                         <td class="px-6 py-4 text-gray-400 text-sm">
                             {{ $activity->created_at->format('d M Y, H:i') }}
                         </td>
@@ -132,6 +129,35 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- Footer: lihat semua / sembunyikan --}}
+        @if($activities->count() > 25)
+        <div class="border-t border-gray-700 px-6 py-4 flex items-center justify-between">
+            <p class="text-sm text-gray-400">
+                Menampilkan <span class="text-white font-semibold">{{ $displayed->count() }}</span>
+                dari <span class="text-white font-semibold">{{ $activities->count() }}</span> aktivitas
+            </p>
+            @if(!$showAll)
+                <a href="{{ request()->fullUrlWithQuery(['show_all' => '1']) }}"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Lihat Semua (+{{ $remaining }} lainnya)
+                </a>
+            @else
+                <a href="{{ request()->fullUrlWithQuery(['show_all' => null]) }}"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-600 hover:bg-gray-500 text-white text-sm font-semibold transition">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    Sembunyikan
+                </a>
+            @endif
+        </div>
+        @endif
+
     </div>
 
 </div>

@@ -1,44 +1,40 @@
-const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+document.addEventListener('DOMContentLoaded', function () {
 
-// Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
+    const themeToggleDarkIcon  = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtn       = document.getElementById('theme-toggle');
 
-const themeToggleBtn = document.getElementById('theme-toggle');
+    if (!themeToggleBtn || !themeToggleDarkIcon || !themeToggleLightIcon) return;
 
-let event = new Event('dark-mode');
-
-themeToggleBtn.addEventListener('click', function() {
-
-    // toggle icons
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    // if set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
+    // Set icon visibility based on current theme
+    function syncIcons() {
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark) {
+            // Dark mode aktif → tampilkan ikon matahari (untuk switch ke light)
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIcon.classList.add('hidden');
         } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-
-    // if NOT set via local storage previously
-    } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
+            // Light mode aktif → tampilkan ikon bulan (untuk switch ke dark)
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
         }
     }
 
-    document.dispatchEvent(event);
-    
+    syncIcons();
+
+    themeToggleBtn.addEventListener('click', function () {
+        const isDark = document.documentElement.classList.contains('dark');
+
+        if (isDark) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('color-theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('color-theme', 'dark');
+        }
+
+        syncIcons();
+        document.dispatchEvent(new CustomEvent('dark-mode'));
+    });
+
 });

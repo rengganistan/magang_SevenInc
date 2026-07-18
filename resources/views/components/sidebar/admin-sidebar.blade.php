@@ -68,13 +68,10 @@
     routeName="reports.activity"
     title="Aktivitas User"/>
 
+<x-sidebar-menu-dashboard
+    routeName="reports.finance"
+    title="Laporan Keuangan"/>
+
     </div>
 
-    <p class="pt-5 pb-2 text-xs font-semibold text-gray-400 uppercase">
-    Pengaturan
-</p>
-
-<x-sidebar-menu-dashboard
-    routeName="settings.index"
-    title="Pengaturan Aplikasi"/>
 </x-sidebar-dashboard>
