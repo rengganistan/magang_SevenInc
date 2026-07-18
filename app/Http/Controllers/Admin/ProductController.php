@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Exports\ProductExport;
+use App\Exports\ProductTemplateExport;
+use App\Imports\ProductImport;
 use App\Models\ActivityLog;
 use App\Models\Category;
 use App\Models\Supplier;
@@ -10,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -107,5 +111,56 @@ class ProductController extends Controller
         ActivityLog::record('Hapus Produk', 'Produk', $nama);
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXPORT
+    |--------------------------------------------------------------------------
+    */
+    public function export()
+    {
+        ActivityLog::record('Export Produk', 'Produk', 'Export Excel');
+
+        return Excel::download(new ProductExport, 'produk-' . date('Y-m-d') . '.xlsx');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | IMPORT
+    |--------------------------------------------------------------------------
+    */
+    public function import(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        $import = new ProductImport;
+
+        Excel::import($import, $request->file('file'));
+
+        $errors = $import->getErrors();
+
+        ActivityLog::record('Import Produk', 'Produk', count($errors) . ' error', 'File: ' . $request->file('file')->getClientOriginalName());
+
+        if (!empty($errors)) {
+            return redirect()->route('products.index')
+                ->with('import_errors', $errors)
+                ->with('success', 'Import selesai dengan beberapa kesalahan.');
+        }
+
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil diimport.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DOWNLOAD TEMPLATE
+    |--------------------------------------------------------------------------
+    */
+    public function downloadTemplate()
+    {
+        return Excel::download(new ProductTemplateExport, 'template-produk.xlsx');
     }
 }
