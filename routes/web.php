@@ -111,11 +111,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/products/import', [ProductController::class, 'import'])
         ->name('products.import');
 
-    Route::get(
-    '/products/template',
-    [ProductController::class, 'downloadTemplate']
-)->name('products.template');
-
     /*
     |--------------------------------------------------------------------------
     | PRODUCTS
@@ -189,6 +184,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         '/transactions/{id}',
         [StockTransactionController::class, 'destroy']
     )->name('transactions.destroy');
+
+    Route::post(
+        '/transactions/{id}/confirm',
+        [StockTransactionController::class, 'confirm']
+    )->name('transactions.confirm');
 
     /*
     |--------------------------------------------------------------------------
@@ -295,6 +295,9 @@ Route::middleware(['auth', 'role:admin,manager'])->prefix('manager')->name('mana
 
     Route::delete('/transactions/{id}', [ManagerStockTransactionController::class, 'destroy'])
         ->name('transactions.destroy');
+
+    Route::post('/transactions/{id}/confirm', [ManagerStockTransactionController::class, 'confirm'])
+        ->name('transactions.confirm');
 
     // Stock Opname
     Route::get('/stock-opname', [ManagerStockOpnameController::class, 'index'])
